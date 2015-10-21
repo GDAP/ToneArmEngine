@@ -202,6 +202,9 @@ void Character::Update(float dt) {
 			UpdateStats(dt);
 		}
 
+		// handle animations
+		CacheAnimationRelatedValues();
+
 		UpdateVisuallEffects(dt);
 	}
 	else {
@@ -949,67 +952,67 @@ void Character::SetActiveWeapon(WeaponID wid) {
 //
 void Character::CacheAnimationRelatedValues() {
 
-	//if (!IsDead()) {
+	if (!IsDead()) {
 
-	//	// check if anything needs to be changed
+		// check if anything needs to be changed
 
-	//	if (IsMoving()) {
-	//	
-	//		// player started moving
-	//		if (!WasMoving()) {
-	//			PlayMovementAnimation();
-	//		}
-	//		// player changed the direction of their movement
-	//		else if (glm::dot(GetMovementDirection(), GetPreviousMovementDirection()) < (1 - MOVEMENT_ANGLE_INTERVAL) && !IsSprinting()) {
-	//			PlayMovementAnimation();
-	//		}
-	//		// player turned away from where they were facing
-	//		else if (glm::dot(GetPreviousForward(), GetForward()) < (1 - MOVEMENT_ANGLE_INTERVAL) && !IsSprinting()) {
-	//			PlayMovementAnimation();
-	//		}
-	//		// player started sprinting
-	//		else if (IsSprinting() && !WasSprinting()) {
-	//			PlayMovementAnimation();
-	//		}
-	//		// player stopped sprinting
-	//		else if (!IsSprinting() && WasSprinting()) {
-	//			PlayMovementAnimation();
-	//		}
-	//		// player started aiming
-	//		else if (IsAiming() && !WasAiming()) {
-	//			PlayMovementAnimation();
-	//		}
-	//		// player stopped aiming
-	//		else if (!IsAiming() && WasAiming() && !GetActiveWeapon()->IsReloading()) {
-	//			PlayMovementAnimation();
-	//		}
-	//		else if (m_model->GetChildOfType<AnimationNode>()->GetAnimationStatus() == AnimationStatus::STOPPED) {
-	//			PlayMovementAnimation();
-	//		}
-	//	}
-	//	else {
-	//		// player stopped
-	//		if (WasMoving()) {
-	//			PlayMovementAnimation();
-	//		}
-	//		// player started aiming
-	//		else if (IsAiming() && !WasAiming()) {
-	//			PlayMovementAnimation();
-	//		}
-	//		// player stopped aiming
-	//		else if (!IsAiming() && WasAiming() && !GetActiveWeapon()->IsReloading()) {
-	//			PlayMovementAnimation();
-	//		}
-	//		else if (m_model->GetChildOfType<AnimationNode>()->GetAnimationStatus() == AnimationStatus::STOPPED) {
-	//			PlayMovementAnimation();
-	//		}
-	//	}
+		if (IsMoving()) {
+		
+			// player started moving
+			if (!WasMoving()) {
+				PlayMovementAnimation();
+			}
+			// player changed the direction of their movement
+			else if (glm::dot(GetMovementDirection(), GetPreviousMovementDirection()) < (1 - MOVEMENT_ANGLE_INTERVAL) && !IsSprinting()) {
+				PlayMovementAnimation();
+			}
+			// player turned away from where they were facing
+			else if (glm::dot(GetPreviousForward(), GetForward()) < (1 - MOVEMENT_ANGLE_INTERVAL) && !IsSprinting()) {
+				PlayMovementAnimation();
+			}
+			// player started sprinting
+			else if (IsSprinting() && !WasSprinting()) {
+				PlayMovementAnimation();
+			}
+			// player stopped sprinting
+			else if (!IsSprinting() && WasSprinting()) {
+				PlayMovementAnimation();
+			}
+			// player started aiming
+			else if (IsAiming() && !WasAiming()) {
+				PlayMovementAnimation();
+			}
+			// player stopped aiming
+			else if (!IsAiming() && WasAiming() && !GetActiveWeapon()->IsReloading()) {
+				PlayMovementAnimation();
+			}
+			else if (m_model->GetChildOfType<AnimationNode>()->GetAnimationStatus() == AnimationStatus::STOPPED) {
+				PlayMovementAnimation();
+			}
+		}
+		else {
+			// player stopped
+			if (WasMoving()) {
+				PlayMovementAnimation();
+			}
+			// player started aiming
+			else if (IsAiming() && !WasAiming()) {
+				PlayMovementAnimation();
+			}
+			// player stopped aiming
+			else if (!IsAiming() && WasAiming() && !GetActiveWeapon()->IsReloading()) {
+				PlayMovementAnimation();
+			}
+			else if (m_model->GetChildOfType<AnimationNode>()->GetAnimationStatus() == AnimationStatus::STOPPED) {
+				PlayMovementAnimation();
+			}
+		}
 
-	//	SetWasMoving(IsMoving());
-	//	SetWasSprinting(IsSprinting());
-	//	SetWasAiming(IsAiming());
-	//	SetPreviousMovementDirection(GetMovementDirection());
-	//}
+		SetWasMoving(IsMoving());
+		SetWasSprinting(IsSprinting());
+		SetWasAiming(IsAiming());
+		SetPreviousMovementDirection(GetMovementDirection());
+	}
 }
 
 //
@@ -1023,22 +1026,18 @@ void Character::PlayShootAnimation() {
 
 			if (IsAiming()) {
 				m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::ShootPrimaryAim), 1, 0.0f, 1.0f);
-				//std::cout << "shooting primary weapon, aiming" << std::endl;
 			}
 			else {
 				m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::ShootPrimaryHip), 1, 0.0f, 1.0f);
-				//std::cout << "shooting primary weapon, from the hip" << std::endl;
 			}
 		}
 		else if (GetActiveWeapon() == (++GetWeapons().begin())->second) {
 
 			if (IsAiming()) {
 				m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::ShootSecondaryAim), 1, 0.0f, 1.0f);
-				//std::cout << "shooting secondary weapon, aiming" << std::endl;
 			}
 			else {
 				m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::ShootSecondaryHip), 1, 0.0f, 1.0f);
-				//std::cout << "shooting secondary weapon, from the hip" << std::endl;
 			}
 		}
 	}
@@ -1048,22 +1047,18 @@ void Character::PlayShootAnimation() {
 
 			if (IsAiming()) {
 				m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::ShootPrimaryAim), 0, 0.0f);
-				std::cout << "shooting primary weapon, aiming" << std::endl;
 			}
 			else {
 				m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::ShootPrimaryHip), 0, 0.0f);
-				std::cout << "shooting primary weapon, from the hip" << std::endl;
 			}
 		}
 		else if (GetActiveWeapon() == (GetWeapons().begin()++)->second) {
 
 			if (IsAiming()) {
 				m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::ShootSecondaryAim), 0, 0.0f);
-				std::cout << "shooting secondary weapon, aiming" << std::endl;
 			}
 			else {
 				m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::ShootSecondaryHip), 0, 0.0f);
-				std::cout << "shooting secondary weapon, from the hip" << std::endl;
 			}
 		}
 	}*/
@@ -1079,24 +1074,20 @@ void Character::PlayReloadAnimation(const int loopCount) {
 		//// reload primary weapon while walking
 		//if (GetActiveWeapon() == m_weapons.begin()->second) {
 		//	m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::ReloadPrimary), loopCount, 0.5f, 1.5f);
-		//	std::cout << "reloading primary" << std::endl;
 		//}
 		//// reload secondary weapon while walking
 		//else if (GetActiveWeapon() == (++m_weapons.begin())->second) {
 		//	m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::ReloadSecondary), loopCount, 0.5f, 1.5f);
-		//	std::cout << "reloading secondary" << std::endl;
 		//}
 	}
 	else {
 		// reload primary weapon while standing
 		if (GetActiveWeapon() == m_weapons.begin()->second) {
 			m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::ReloadPrimary), loopCount, 0.0f, 1.8f);
-			//std::cout << "reloading primary" << std::endl;
 		}
 		// reload secondary weapon while standing
 		else if (GetActiveWeapon() == (++m_weapons.begin())->second) {
 			m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::ReloadSecondary), loopCount, 0.0f, 0.5f);
-			//std::cout << "reloading secondary" << std::endl;
 		}
 	}
 }
@@ -1110,12 +1101,10 @@ void Character::PlayCockAnimation() {
 
 		if (GetActiveWeapon() == m_weapons.begin()->second) {
 			m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::CockPrimary), 1, 0.0f, 0.75f);
-			//std::cout << "cocking primary" << std::endl;
 		}
 		// reload secondary weapon while standing
 		else if (GetActiveWeapon() == (++m_weapons.begin())->second) {
 			m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::CockSecondary), 1, 0.0f, 1.0f); 
-			//std::cout << "cocking secondary" << std::endl;
 		}
 	}
 }
@@ -1126,7 +1115,6 @@ void Character::PlayCockAnimation() {
 void Character::PlayDeathAnimation() {
 
 	m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::Die), 1, 0.0f, 0.7f);
-	//std::cout << "dying" << std::endl;
 }
 
 //
@@ -1138,8 +1126,6 @@ void Character::PlayChangeWeaponAnimation() {
 
 	// FIXME: play the actual animation
 	PlayMovementAnimation();
-
-	//std::cout << "switching weapons" << std::endl;
 }
 
 // figures out which of the movement animations need to be played
@@ -1151,15 +1137,12 @@ void Character::PlayMovementAnimation() {
 
 		if (!IsAiming()) {
 			m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::Idle), -1, 0.0f);
-			//std::cout << "playing idle" << std::endl;
 		}
 		else if (GetActiveWeapon() == m_weapons.begin()->second) {
 			m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::AimPrimary), -1, 0.0f);
-			//std::cout << "aiming primary, not moving" << std::endl;
 		}
 		else if (GetActiveWeapon() == (++m_weapons.begin())->second) {
 			m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::AimSecondary), -1, 0.0f);
-			//std::cout << "aiming secondary, not moving" << std::endl;
 		}
 	}
 	else {
@@ -1171,18 +1154,12 @@ void Character::PlayMovementAnimation() {
 
 			if (GetActiveWeapon() == m_weapons.begin()->second) {
 				m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::RunPrimary), -1, 0.0f, 1.25f);
-				//std::cout << "running" << std::endl;
 			}
 			else if (GetActiveWeapon() == (++m_weapons.begin())->second) {
 				m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::RunSecondary), -1, 0.0f, 1.25f);
-				//std::cout << "running" << std::endl;
 			}
 		}
 		else {
-			/*std::cout << "forward: " << "(" << GetForward().x << ", " << GetForward().y << ", " << GetForward().z << ")" << std::endl;
-			std::cout << "right: " << "(" << m_transform.GetRight().x << ", " << m_transform.GetRight().y << ", " << m_transform.GetRight().z << ")" << std::endl;
-			std::cout << "dotForward: " << dotForward << std::endl;
-			std::cout << "dotRight: " << dotRight << std::endl;*/
 
 			if (dotRight > 1 - MOVEMENT_ANGLE_INTERVAL) {
 
@@ -1190,20 +1167,16 @@ void Character::PlayMovementAnimation() {
 
 					if (GetActiveWeapon() == m_weapons.begin()->second) {
 						m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::WalkRightPrimary), -1, 0.0f, 1.7f);
-						//std::cout << "walking right" << std::endl;
 					}
 					else if (GetActiveWeapon() == (++m_weapons.begin())->second) {
 						m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::WalkRightSecondary), -1, 0.0f, 1.7f);
-						//std::cout << "walking right" << std::endl;
 					}
 				}
 				else if (GetActiveWeapon() == m_weapons.begin()->second) {
 					m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::WalkRightAimPrimary), -1, 0.0f, 1.25f);
-					//std::cout << "walking right, aiming" << std::endl;
 				}
 				else if (GetActiveWeapon() == (++m_weapons.begin())->second) {
 					m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::WalkRightAimSecondary), -1, 0.0f, 1.25f);
-					//std::cout << "walking right, aiming" << std::endl;
 				}
 			}
 			else if (dotRight > MOVEMENT_ANGLE_INTERVAL && dotRight < 1 - MOVEMENT_ANGLE_INTERVAL) {
@@ -1216,13 +1189,11 @@ void Character::PlayMovementAnimation() {
 							m_model->GetChildOfType<AnimationNode>()->PlayBlendedAnimation(0.0f, 2,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkForwardAimPrimary), 1 - dotRight, -1, 1.25f,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkRightAimPrimary), dotRight, -1, 1.25f);
-							//std::cout << "blending right & forward, aiming" << std::endl;	
 						}
 						else if (GetActiveWeapon() == (++m_weapons.begin())->second) {
 							m_model->GetChildOfType<AnimationNode>()->PlayBlendedAnimation(0.0f, 2,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkForwardAimSecondary), 1 - dotRight, -1, 1.25f,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkRightAimSecondary), dotRight, -1, 1.25f);
-							//std::cout << "blending right & forward, aiming" << std::endl;	
 						}
 					}
 					else {
@@ -1231,13 +1202,11 @@ void Character::PlayMovementAnimation() {
 							m_model->GetChildOfType<AnimationNode>()->PlayBlendedAnimation(0.0f, 2,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkForwardPrimary), 1 - dotRight, -1, 1.7f,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkRightPrimary), dotRight, -1, 1.7f);
-							//std::cout << "blending right & forward" << std::endl;	
 						}
 						else if (GetActiveWeapon() == (++m_weapons.begin())->second) {
 							m_model->GetChildOfType<AnimationNode>()->PlayBlendedAnimation(0.0f, 2,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkForwardSecondary), 1 - dotRight, -1, 1.7f,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkForwardSecondary), dotRight, -1, 1.7f);
-							//std::cout << "blending right & forward" << std::endl;	
 						}
 					}
 				}
@@ -1249,13 +1218,11 @@ void Character::PlayMovementAnimation() {
 							m_model->GetChildOfType<AnimationNode>()->PlayBlendedAnimation(0.0f, 2,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkBackwardAimPrimary), 1 - dotRight, -1, 1.25f,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkRightAimPrimary), dotRight, -1, 1.25f);
-							//std::cout << "blending right & backward, aiming" << std::endl;	
 						}
 						else if (GetActiveWeapon() == (++m_weapons.begin())->second) {
 							m_model->GetChildOfType<AnimationNode>()->PlayBlendedAnimation(0.0f, 2,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkBackwardAimSecondary), 1 - dotRight, -1, 1.25f,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkRightAimSecondary), dotRight, -1, 1.25f);
-							//std::cout << "blending right & backward, aiming" << std::endl;	
 						}
 					}
 					else {
@@ -1264,13 +1231,11 @@ void Character::PlayMovementAnimation() {
 							m_model->GetChildOfType<AnimationNode>()->PlayBlendedAnimation(0.0f, 2,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkBackwardPrimary), 1 - dotRight, -1, 1.7f,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkRightPrimary), dotRight, -1, 1.7f);
-							//std::cout << "blending right & backward" << std::endl;
 						}
 						else if (GetActiveWeapon() == (++m_weapons.begin())->second) {
 							m_model->GetChildOfType<AnimationNode>()->PlayBlendedAnimation(0.0f, 2,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkBackwardSecondary), 1 - dotRight, -1, 1.7f,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkBackwardSecondary), dotRight, -1, 1.7f);
-							//std::cout << "blending right & backward" << std::endl;	
 						}
 					}
 				}
@@ -1283,22 +1248,18 @@ void Character::PlayMovementAnimation() {
 						
 						if (GetActiveWeapon() == m_weapons.begin()->second) {
 							m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::WalkForwardAimPrimary), -1, 0.0f, 1.25f);
-							//std::cout << "walking forward, aiming" << std::endl;
 						}
 						else if (GetActiveWeapon() == (++m_weapons.begin())->second) {
 							m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::WalkForwardAimSecondary), -1, 0.0f, 1.25f);
-							//std::cout << "walking forward, aiming" << std::endl;
 						}
 					}
 					else {
 
 						if (GetActiveWeapon() == m_weapons.begin()->second) {
 							m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::WalkForwardPrimary), -1, 0.0f, 1.7f);
-							//std::cout << "walking forward" << std::endl;
 						}
 						else if (GetActiveWeapon() == (++m_weapons.begin())->second) {
 							m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::WalkForwardSecondary), -1, 0.0f, 1.7f);
-							//std::cout << "walking forward" << std::endl;
 						}
 					}
 				}
@@ -1308,22 +1269,18 @@ void Character::PlayMovementAnimation() {
 						
 						if (GetActiveWeapon() == m_weapons.begin()->second) {
 							m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::WalkBackwardAimPrimary), -1, 0.0f, 1.25f);
-							//std::cout << "walking backward, aiming" << std::endl;
 						}
 						else if (GetActiveWeapon() == (++m_weapons.begin())->second) {
 							m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::WalkBackwardAimSecondary), -1, 0.0f, 1.25f);
-							//std::cout << "walking backward, aiming" << std::endl;
 						}
 					}
 					else {
 
 						if (GetActiveWeapon() == m_weapons.begin()->second) {
 							m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::WalkBackwardPrimary), -1, 0.0f, 1.7f);
-							//std::cout << "walking backward" << std::endl;
 						}
 						else if (GetActiveWeapon() == (++m_weapons.begin())->second) {
 							m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::WalkBackwardSecondary), -1, 0.0f, 1.7f);
-							//std::cout << "walking backward" << std::endl;
 						}
 					}
 				}
@@ -1338,13 +1295,11 @@ void Character::PlayMovementAnimation() {
 							m_model->GetChildOfType<AnimationNode>()->PlayBlendedAnimation(0.0f, 2,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkForwardAimPrimary), -(-1- dotRight), -1, 1.25f,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkLeftAimPrimary), -dotRight, -1, 1.25f);
-							//std::cout << "blending left & forward, aiming" << std::endl;	
 						}
 						else if (GetActiveWeapon() == (++m_weapons.begin())->second) {
 							m_model->GetChildOfType<AnimationNode>()->PlayBlendedAnimation(0.0f, 2,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkForwardAimSecondary), 1 - dotRight, -1, 1.25f,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkLeftAimSecondary), dotRight, -1, 1.25f);
-							//std::cout << "blending left & forward, aiming" << std::endl;	
 						}
 					}
 					else {
@@ -1353,13 +1308,11 @@ void Character::PlayMovementAnimation() {
 							m_model->GetChildOfType<AnimationNode>()->PlayBlendedAnimation(0.0f, 2,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkForwardPrimary), 1 - dotRight, -1, 1.7f,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkLeftPrimary), dotRight, -1, 1.7f);
-							//std::cout << "blending left & forward" << std::endl;
 						}
 						else if (GetActiveWeapon() == (++m_weapons.begin())->second) {
 							m_model->GetChildOfType<AnimationNode>()->PlayBlendedAnimation(0.0f, 2,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkForwardSecondary), 1 - dotRight, -1, 1.7f,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkLeftSecondary), dotRight, -1, 1.7f);
-							//std::cout << "blending left & forward" << std::endl;
 						}
 					}
 				}
@@ -1371,13 +1324,11 @@ void Character::PlayMovementAnimation() {
 							m_model->GetChildOfType<AnimationNode>()->PlayBlendedAnimation(0.0f, 2,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkBackwardAimPrimary), 1 - dotRight, -1, 1.25f,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkLeftAimPrimary), dotRight, -1, 1.25f);
-							//std::cout << "blending left & backward, aiming" << std::endl;	
 						}
 						else if (GetActiveWeapon() == (++m_weapons.begin())->second) {
 							m_model->GetChildOfType<AnimationNode>()->PlayBlendedAnimation(0.0f, 2,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkBackwardAimSecondary), 1 - dotRight, -1, 1.25f,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkLeftAimSecondary), dotRight, -1, 1.25f);
-							//std::cout << "blending left & backward, aiming" << std::endl;	
 						}
 					}
 					else {
@@ -1386,13 +1337,11 @@ void Character::PlayMovementAnimation() {
 							m_model->GetChildOfType<AnimationNode>()->PlayBlendedAnimation(0.0f, 2,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkBackwardPrimary), 1 - dotRight, -1, 1.7f,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkLeftPrimary), dotRight, -1, 1.7f);
-							//std::cout << "blending left & backward" << std::endl;
 						}
 						else if (GetActiveWeapon() == (++m_weapons.begin())->second) {
 							m_model->GetChildOfType<AnimationNode>()->PlayBlendedAnimation(0.0f, 2,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkBackwardSecondary), 1 - dotRight, -1, 1.7f,
 																						   CharacterAnimations.at(CharacterAnimationTypes::WalkLeftSecondary), dotRight, -1, 1.7f);
-							//std::cout << "blending left & backward" << std::endl;
 						}
 					}
 				}
@@ -1403,26 +1352,20 @@ void Character::PlayMovementAnimation() {
 
 					if (GetActiveWeapon() == m_weapons.begin()->second) {
 						m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::WalkLeftPrimary), -1, 0.0f, 1.7f);
-						//std::cout << "walking left" << std::endl;
 					}
 					else if (GetActiveWeapon() == (++m_weapons.begin())->second) {
 						m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::WalkLeftSecondary), -1, 0.0f, 1.7f);
-						//std::cout << "walking left" << std::endl;
 					}
 				}
 				else if (GetActiveWeapon() == m_weapons.begin()->second) {
 					m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::WalkLeftAimPrimary), -1, 0.0f, 1.25f);
-					//std::cout << "walking left, aiming" << std::endl;
 				}
 				else if (GetActiveWeapon() == (++m_weapons.begin())->second) {
 					m_model->GetChildOfType<AnimationNode>()->PlayAnimation(CharacterAnimations.at(CharacterAnimationTypes::WalkLeftAimSecondary), -1, 0.0f, 1.25f);
-					//std::cout << "walking left, aiming" << std::endl;
 				}
 			}
 		}
 
-		//SetPreviousForward(GetForward());
-
-		//std::cout << std::endl;
+		SetPreviousForward(GetForward());
 	}
 }

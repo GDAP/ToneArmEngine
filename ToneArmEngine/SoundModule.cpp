@@ -18,7 +18,7 @@
 
 #include <iostream>
 
-#define	MAX_VOLUME					0.0f
+#define	MAX_VOLUME					100.0f
 #define	VOLUME_DROP_PACE			100.0f	// volume for all sounds drops by VOLUME_DROP_RATE,
 #define	VOLUME_DROP_RATE			8.5f;	// when the source sound moves away from the sound listener by a distance of VOLUME_DROP_PACE
 

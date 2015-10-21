@@ -161,8 +161,17 @@ public:
 	const bool					IsMoving() const											{ return m_moving; }
 	void						SetMoving(const bool moving)								{ m_moving = moving; }
 
+	const bool					WasMoving() const											{ return m_wasMoving; }
+	void						SetWasMoving(const bool moving)								{ m_wasMoving = moving; }
+
 	const glm::vec3&			GetMovementDirection() const								{ return m_movementDirection; }
 	void						SetMovementDirection(const glm::vec3& direction)			{ m_movementDirection = direction; }
+
+	const glm::vec3&			GetPreviousMovementDirection() const						{ return m_previousMovementDirection; }
+	void						SetPreviousMovementDirection(const glm::vec3& direction)	{ m_previousMovementDirection = direction; }
+
+	const glm::vec3&			GetPreviousForward() const									{ return m_previousForward; }
+	void						SetPreviousForward(const glm::vec3& forward)				{ m_previousForward = forward; } 
 
 	const bool					IsAiming() const											{ return m_aiming; }
 	virtual void				SetAiming(const bool aiming);
@@ -170,11 +179,17 @@ public:
 	const bool					IsAimingInterrupted() const									{ return m_aimingInterrupted; }
 	void						SetAimingInterrupted(const bool value)						{ m_aimingInterrupted = value; }
 
+	const bool					WasAiming() const											{ return m_wasAiming; }
+	void						SetWasAiming(const bool aiming)								{ m_wasAiming = aiming; }
+
 	const bool					IsSprinting() const											{ return m_sprinting; }
 	void						SetSprinting(const bool sprinting);
 
 	const bool					IsSprintInterrupted() const									{ return m_sprintInterrupted; }
 	void						SetSprintInterrupted(const bool value)						{ m_sprintInterrupted = value; }
+
+	const bool					WasSprinting() const										{ return m_wasSprinting; }
+	void						SetWasSprinting(const bool sprinting)						{ m_wasSprinting = sprinting; }
 
 	const bool					IsStaminaRecharging() const									{ return m_staminaRecharging; }
 	void						SetStaminaRecharging(const bool recharging)					{ m_staminaRecharging = recharging; }
@@ -200,12 +215,17 @@ protected:
 
 	// movement
 	glm::vec3					m_movementDirection;
+	glm::vec3					m_previousMovementDirection;
+	glm::vec3					m_previousForward;
 
 	bool						m_moving;
+	bool						m_wasMoving;
 	bool						m_sprinting;
+	bool						m_wasSprinting;
 	bool						m_sprintInterrupted;
 	float						m_sprintInterruptionTimer;
 	bool						m_aiming;
+	bool						m_wasAiming;
 	bool						m_aimingInterrupted;
 	bool						m_staminaRecharging;
 
